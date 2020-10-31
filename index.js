@@ -12,7 +12,7 @@ const NAMESPACE = 'gutenberg-post-picker';
  * @return {*} React JSX
  */
 export const PostPicker = (props) => {
-	const { onSelectPost, label = '' } = props;
+	const { onSelectPost, label = '', postTypes = [ 'posts', 'pages' ] } = props;
 
 	const [searchString, setSearchString] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
@@ -32,18 +32,14 @@ export const PostPicker = (props) => {
 	 */
 	const handleSearchStringChange = (keyword) => {
 		setSearchString(keyword);
-		setIsLoading(true);
-		Promise.all([
-			apiFetch({
-				path: `/wp/v2/pages?search=${keyword}`,
-			}),
-			apiFetch({
-				path: `/wp/v2/posts?search=${keyword}`,
-			}),
-		]).then(([pages, posts]) => {
-			setSearchResults([...pages, ...posts]);
-			setIsLoading(false);
-		});
+        setIsLoading(true);
+         
+        Promise.all( postTypes.map( postType => apiFetch({
+            path: `/wp/v2/${postType}?search=${keyword}`,
+        }) ) ).then( (results) => {
+            setSearchResults( results.reduce( (result, final) => [...final, ...result], [] ) );
+            setIsLoading( false );
+        })
 	};
 
 	return (

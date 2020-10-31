@@ -52,6 +52,7 @@ registerBlockType( `${ NAMESPACE }/hello-world`, {
             </InspectorControls>
             <div className={ className }>
                 <PostPicker 
+                    postTypes={ [ 'pages', 'posts' ] }
                     label={ __( 'Select a Post or Page', NAMESPACE ) }
                     onSelectPost={ handlePostSelection }
                 />
