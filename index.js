@@ -62,16 +62,19 @@ const PostPicker = (props) => {
 								<Button disabled>{__('No Items found', NAMESPACE)}</Button>
 							</li>
 						)}
-						{searchResults.map((post) => {
-							if (!post.title.rendered.length) {
-								return null;
+						{searchResults.map((post, index) => {
+                            const isLastItem = index === searchResults.length -1;
+                            if (!post.title.rendered.length) {
+                                return null;
 							}
 							return (
 								<li key={post.id} className={`${NAMESPACE}-grid-item`}>
 									<Button onClick={() => handleItemSelection(post)}>
 										<RawHTML>{post.title.rendered}</RawHTML>
 									</Button>
-									<hr />
+									{ !isLastItem ?
+                                        <hr /> : null
+                                    }
 								</li>
 							);
 						})}
