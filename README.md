@@ -1,6 +1,6 @@
 # gutenberg-post-picker
 
-This component is build using only WordPres Core Components.
+A simple Post Picker Component build with the core gutenberg components.
 
 ## Usage
 
