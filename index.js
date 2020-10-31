@@ -3,7 +3,7 @@ import { useState, RawHTML } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, Popover, Button, Spinner } from '@wordpress/components';
 
-const NAMESPACE = 'fabiankaegy-postpicker';
+const NAMESPACE = 'gutenberg-post-picker';
 
 /**
  * Post Picker
@@ -12,7 +12,7 @@ const NAMESPACE = 'fabiankaegy-postpicker';
  * @return {*} React JSX
  */
 const PostPicker = (props) => {
-	const { onSelectPost } = props;
+	const { onSelectPost, label = '' } = props;
 
 	const [searchString, setSearchString] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
@@ -47,18 +47,18 @@ const PostPicker = (props) => {
 	};
 
 	return (
-		<div className={`${NAMESPACE}-post-picker`}>
+		<div className={`${NAMESPACE}`}>
 			<TextControl
-				label={__('Search for a Post / Page', NAMESPACE)}
+				label={label}
 				value={searchString}
 				onChange={handleSearchStringChange}
 			/>
 			{searchString.length ? (
 				<Popover focusOnMount={false} noArrow={false}>
-					<ul className={`${NAMESPACE}-post-picker-grid`}>
+					<ul className={`${NAMESPACE}-grid`}>
 						{isLoading && <Spinner />}
 						{!isLoading && !searchResults.length && (
-							<li className={`${NAMESPACE}-post-picker-grid-item`}>
+							<li className={`${NAMESPACE}-grid-item`}>
 								<Button disabled>{__('No Items found', NAMESPACE)}</Button>
 							</li>
 						)}
@@ -67,7 +67,7 @@ const PostPicker = (props) => {
 								return null;
 							}
 							return (
-								<li key={post.id} className={`${NAMESPACE}-post-picker-grid-item`}>
+								<li key={post.id} className={`${NAMESPACE}-grid-item`}>
 									<Button onClick={() => handleItemSelection(post)}>
 										<RawHTML>{post.title.rendered}</RawHTML>
 									</Button>
