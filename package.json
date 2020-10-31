@@ -1,0 +1,27 @@
+{
+  "name": "gutenberg-post-picker",
+  "version": "0.1.0",
+  "description": "A simple Post Picker Component build with the core gutenberg components.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://fabiankaegy@github.com/fabiankaegy/gutenberg-post-picker.git"
+  },
+  "keywords": [
+    "gutenberg",
+    "WordPress",
+    "block-editor"
+  ],
+  "author": "Faian Kägy",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/fabiankaegy/gutenberg-post-picker/issues"
+  },
+  "homepage": "https://github.com/fabiankaegy/gutenberg-post-picker#readme",
+  "devDependencies": {
+    "@wordpress/eslint-plugin": "^7.3.0"
+  }
+}
