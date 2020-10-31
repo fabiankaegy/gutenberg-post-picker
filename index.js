@@ -12,7 +12,12 @@ const NAMESPACE = 'gutenberg-post-picker';
  * @return {*} React JSX
  */
 export const PostPicker = (props) => {
-	const { onSelectPost, label = '', postTypes = [ 'posts', 'pages' ] } = props;
+	const { 
+        onSelectPost,
+        label = '',
+        postTypes = [ 'posts', 'pages' ],
+        placeholder = ''
+    } = props;
 
 	const [searchString, setSearchString] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
@@ -47,7 +52,8 @@ export const PostPicker = (props) => {
 			<TextControl
 				label={label}
 				value={searchString}
-				onChange={handleSearchStringChange}
+                onChange={handleSearchStringChange}
+                placeholder={ placeholder }
 			/>
 			{searchString.length ? (
 				<Popover focusOnMount={false} noArrow={false}>

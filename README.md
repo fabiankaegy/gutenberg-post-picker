@@ -27,6 +27,9 @@ This function gets called when an Item from the suggestions has been selected. I
 ### `label` - Label that is presented above the TextInput control
 This label alows you to add a label to the search field. 
 
+### `placeholder` - Placeholder text that is presented in the TextInput control
+This `placeholder` alows you to add placeholder text to the search field. 
+
 ### `postTypes` - Override the Post Types that should be searched
 You can pass an array with the names of the post types that should get searched in here. The default is: `[ 'posts', 'pages' ]`. Each of the item you put in here will be used like this: 
 ```js
