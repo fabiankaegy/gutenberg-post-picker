@@ -1,7 +1,7 @@
 import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, Placeholder } from '@wordpress/components';
 
 import {PostPicker, SelectedPostPreview} from 'gutenberg-post-picker';
 
@@ -50,13 +50,13 @@ registerBlockType( `${ NAMESPACE }/hello-world`, {
                     />
                 </PanelBody>
             </InspectorControls>
-            <div className={ className }>
+            <Placeholder label={ __( 'Post Picker', NAMESPACE ) } instructions={ __( 'Use the text field so search for a post', NAMESPACE) } className={ className }>
                 <PostPicker 
                     postTypes={ [ 'pages', 'posts' ] }
                     label={ __( 'Select a Post or Page', NAMESPACE ) }
                     onSelectPost={ handlePostSelection }
                 />
-            </div>
+            </Placeholder>
             </>
         )
     },
