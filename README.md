@@ -1,6 +1,6 @@
 # PostPicker
 
-A simple Post Picker Component build with the core gutenberg components.
+A simple Post Picker Component build with the core gutenberg components. This component does not include any build files and does not bundle the WordPress components. Therefore this needs to be used in an environemt where the [`Dependency Extraction Plugin`](https://www.npmjs.com/package/@wordpress/dependency-extraction-webpack-plugin) is used and the `import { component } from '@wordpress/package';` is supported. 
 
 ## Usage
 
