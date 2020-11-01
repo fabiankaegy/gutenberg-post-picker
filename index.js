@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import { useState, RawHTML } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, Popover, Button, Spinner } from '@wordpress/components';
+import { TextControl, Popover, Button, Spinner, TextHighlight, NavigableMenu } from '@wordpress/components';
+import { safeDecodeURI, filterURLForDisplay } from '@wordpress/url';
 
 const NAMESPACE = 'gutenberg-post-picker';
 
@@ -22,6 +23,7 @@ export const PostPicker = (props) => {
 	const [searchString, setSearchString] = useState('');
 	const [searchResults, setSearchResults] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	const [selectedItem, setSelectedItem] = useState(null);
 
 	function handleItemSelection(post) {
 		onSelectPost(post);
@@ -45,10 +47,19 @@ export const PostPicker = (props) => {
             setSearchResults( results.reduce( (result, final) => [...final, ...result], [] ) );
             setIsLoading( false );
         })
-	};
+    };
+    
+    function handleSelection( item ) {
+        if ( item === 0) {
+            setSelectedItem( null );
+        }
+
+        setSelectedItem( item );
+    }
 
 	return (
 		<div className={`${NAMESPACE}`}>
+            <NavigableMenu onNavigate={ handleSelection } orientation={ 'vertical' }>
 			<TextControl
 				label={label}
 				value={searchString}
@@ -56,67 +67,46 @@ export const PostPicker = (props) => {
                 placeholder={ placeholder }
 			/>
 			{searchString.length ? (
-				<Popover focusOnMount={false} noArrow={false}>
-					<ul
+                    <ul
                         className={`${NAMESPACE}-grid`}
                         style={{
                             marginTop: '0',
                             marginBottom: '0',
+                            marginLeft: '0',
+                            paddingLeft: '0',
+                            listStyle: "none"
                         }}
                     >
-						{isLoading && <Spinner />}
-						{!isLoading && !searchResults.length && (
-							<li className={`${NAMESPACE}-grid-item`}>
-								<Button disabled>{__('No Items found', NAMESPACE)}</Button>
-							</li>
-						)}
-						{searchResults.map((post, index) => {
-                            const isLastItem = index === searchResults.length -1;
+                        {isLoading && <Spinner />}
+                        {!isLoading && !searchResults.length && (
+                            <li className={`${NAMESPACE}-grid-item`}>
+                                <Button disabled>{__('No Items found', NAMESPACE)}</Button>
+                            </li>
+                        )}
+                        {searchResults.map((post, index) => {
                             if (!post.title.rendered.length) {
                                 return null;
                             }
                             
-							return (
-								<li key={post.id} className={`${NAMESPACE}-grid-item`} style={ {
+                            return (
+                                <li key={post.id} className={`${NAMESPACE}-grid-item`} style={ {
                                     marginBottom: "0"
                                 } }>
-									<Button
+                                    <SearchItem
                                         onClick={() => handleItemSelection(post)}
-                                        style={ {
-                                            display: "block",
-                                            width: "100%",
-                                            textAlign: "left",
-                                            height: 'auto',
-                                            padding: '0.5rem'
-                                        } }
-                                    >
-                                        <PostPreview post={ post } />
-									</Button>
-									{ !isLastItem ?
-                                        <hr style={{ margin: '0' }} /> : null
-                                    }
-								</li>
-							);
-						})}
-					</ul>
-				</Popover>
+                                        searchTerm={ searchString }
+                                        suggestion={ post }
+                                        isSelected={ selectedItem === index + 1 }
+                                    />
+                                </li>
+                            );
+                        })}
+                    </ul>
 			) : null}
+            </NavigableMenu>
 		</div>
 	);
 };
-
-export function PostPreview( props ) {
-    const { post } = props;
-    return (
-        <div {...{...props, post: null}}>
-            <span style={{
-                fontSize: "0.75em",
-                color: 'var(--wp-admin-theme-color-darker-10)'
-            }}>{post.type}</span>
-            <RawHTML>{post.title.rendered}</RawHTML>
-        </div>
-    )
-}
 
 export function SelectedPostPreview( props ) {
 
@@ -128,16 +118,54 @@ export function SelectedPostPreview( props ) {
             flexDirection: 'column'
         }}>
             <label>{label}</label>
-            <PostPreview 
-                post={ post } 
-                style={{
-                    marginBottom: '1rem',
-                    border: "1px solid #444",
-                    borderRadius: "5px",
-                    padding: "0.25rem"
-
-                }}
+            <SearchItem 
+                suggestion={ post }
+                onClick={ null }
             />
         </div>
     )
+}
+
+function SearchItem( props ) {
+    const {
+        suggestion,
+        onClick,
+        searchTerm = '',
+        isSelected = false
+    } = props;
+
+    return (
+		<Button
+			onClick={ onClick }
+            className={ `block-editor-link-control__search-item is-entity ${ isSelected && 'is-selected' }` }
+            style={{
+                borderRadius: '0'
+            }}
+		>
+			<span className="block-editor-link-control__search-item-header">
+				<span className="block-editor-link-control__search-item-title">
+					<TextHighlight
+						text={ suggestion.title.rendered }
+						highlight={ searchTerm }
+					/>
+				</span>
+				<span
+					aria-hidden={ true }
+					className="block-editor-link-control__search-item-info"
+				>
+                    {  
+                        filterURLForDisplay(
+                            safeDecodeURI( suggestion.link )
+                        ) || '' 
+                    }
+				</span>
+			</span>
+			{ suggestion.type && (
+				<span className="block-editor-link-control__search-item-type">
+					{ /* Rename 'post_tag' to 'tag'. Ideally, the API would return the localised CPT or taxonomy label. */ }
+					{ suggestion.type === 'post_tag' ? 'tag' : suggestion.type }
+				</span>
+			) }
+		</Button>
+	);
 }
