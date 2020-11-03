@@ -3,6 +3,7 @@ import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { TextControl, Button, Spinner, TextHighlight, NavigableMenu } from '@wordpress/components';
 import { safeDecodeURI, filterURLForDisplay } from '@wordpress/url';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const NAMESPACE = 'gutenberg-post-picker';
 
@@ -87,9 +88,11 @@ export const PostPicker = (props) => {
                             if (!post.title.rendered.length) {
                                 return null;
                             }
+
+                            const uniqueId = `${post.slug}-preview`;
                             
                             return (
-                                <li key={post.id} className={`${NAMESPACE}-grid-item`} style={ {
+                                <li key={post.id} HtmlFor={ uniqueId } className={`${NAMESPACE}-grid-item`} style={ {
                                     marginBottom: "0"
                                 } }>
                                     <SearchItem
@@ -97,6 +100,7 @@ export const PostPicker = (props) => {
                                         searchTerm={ searchString }
                                         suggestion={ post }
                                         isSelected={ selectedItem === index + 1 }
+                                        id={ uniqueId }
                                     />
                                 </li>
                             );
@@ -131,11 +135,13 @@ function SearchItem( props ) {
         suggestion,
         onClick,
         searchTerm = '',
-        isSelected = false
+        isSelected = false,
+        id
     } = props;
 
     return (
 		<Button
+            id={ id }
 			onClick={ onClick }
             className={ `block-editor-link-control__search-item is-entity ${ isSelected && 'is-selected' }` }
             style={{
@@ -145,7 +151,7 @@ function SearchItem( props ) {
 			<span className="block-editor-link-control__search-item-header">
 				<span className="block-editor-link-control__search-item-title">
 					<TextHighlight
-						text={ suggestion.title.rendered }
+						text={ decodeEntities( suggestion.title.rendered ) }
 						highlight={ searchTerm }
 					/>
 				</span>
