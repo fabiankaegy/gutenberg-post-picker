@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
-import { useState, RawHTML } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { TextControl, Popover, Button, Spinner, TextHighlight, NavigableMenu } from '@wordpress/components';
+import { TextControl, Button, Spinner, TextHighlight, NavigableMenu } from '@wordpress/components';
 import { safeDecodeURI, filterURLForDisplay } from '@wordpress/url';
 
 const NAMESPACE = 'gutenberg-post-picker';
