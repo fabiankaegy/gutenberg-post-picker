@@ -88,11 +88,9 @@ export const PostPicker = (props) => {
                             if (!post.title.rendered.length) {
                                 return null;
                             }
-
-                            const uniqueId = `${post.slug}-preview`;
                             
                             return (
-                                <li key={post.id} HtmlFor={ uniqueId } className={`${NAMESPACE}-grid-item`} style={ {
+                                <li key={post.id} className={`${NAMESPACE}-grid-item`} style={ {
                                     marginBottom: "0"
                                 } }>
                                     <SearchItem
@@ -100,7 +98,6 @@ export const PostPicker = (props) => {
                                         searchTerm={ searchString }
                                         suggestion={ post }
                                         isSelected={ selectedItem === index + 1 }
-                                        id={ uniqueId }
                                     />
                                 </li>
                             );
@@ -116,15 +113,17 @@ export function SelectedPostPreview( props ) {
 
     const { post, label } = props;
 
+    const uniqueId = `${post.slug}-preview`;
     return (
         <div style={{
             display: 'flex',
             flexDirection: 'column'
         }}>
-            <label>{label}</label>
+            <label htmlFor={ uniqueId }>{label}</label>
             <SearchItem 
                 suggestion={ post }
                 onClick={ null }
+                id={ uniqueId }
             />
         </div>
     )
@@ -136,7 +135,7 @@ function SearchItem( props ) {
         onClick,
         searchTerm = '',
         isSelected = false,
-        id
+        id = ''
     } = props;
 
     return (
