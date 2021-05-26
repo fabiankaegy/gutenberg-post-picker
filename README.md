@@ -11,7 +11,7 @@ function MyComponent( props ) {
 
     return (
         <PostPicker
-            onPostSelect={ console.log }
+            onSelectPost={ console.log }
             label={ "Please select a Post or Page:" }
             postTypes={ [ 'posts', 'pages' ] }
         />
@@ -23,7 +23,7 @@ function MyComponent( props ) {
 
 | Name             | Type       | Default               | Description                                                            |
 | ---------------- | ---------- | --------------------- | ---------------------------------------------------------------------- |
-| `onPostSelect`   | `function` | `undefined`            | Callback function that gets called with the post object upon selection |
+| `onSelectPost`   | `function` | `undefined`            | Callback function that gets called with the post object upon selection |
 | `label`          | `string`   | `''`                   | Renders a label for the Search Field.                                  |
 | `placeholder`    | `string`   | `''`                   | Renders placeholder text inside the Search Field.                      |
 | `postTypes`      | `array`    | `[ 'posts', 'pages' ]` | Names of the post types that should get searched                       |
